@@ -1,18 +1,9 @@
-FROM maven:3.8.4-openjdk-17-slim AS build
-WORKDIR /app
-COPY . .
-# Build the JAR
-RUN mvn clean package -DskipTests
-
-# Stage 2: Final image
+# Final Dockerfile
 FROM eclipse-temurin:17-jdk-jammy
 WORKDIR /app
 
-# Copy the JAR from build stage
-COPY --from=build /app/target/*.jar app.jar
+# Copy JAR from pipeline build output
+COPY target/*.jar app.jar
 
-# Expose port
 EXPOSE 8080
-
-# Run Spring Boot
-ENTRYPOINT ["java","-jar","/app.jar"]
+ENTRYPOINT ["java", "-jar", "/app.jar"]
