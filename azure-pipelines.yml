@@ -12,20 +12,8 @@ stages:
     jobs:
       - job: buildJobs
         steps:
-          - task: Maven@4
-            inputs:
-              azureSubscription: 'DjAzureSPNConnection'
-              mavenPomFile: 'pom.xml'
-              goals: 'clean package'
-              options: '-DskipTests'
-              publishJUnitResults: true
-              testResultsFiles: '**/surefire-reports/TEST-*.xml'
-              javaHomeOption: 'JDKVersion'
-              mavenVersionOption: 'Default'
-              mavenAuthenticateFeed: false
-              effectivePomSkip: false
-              sonarQubeRunAnalysis: false
-
+          
+          - checkout: self
           - task: Docker@2
             inputs:
               containerRegistry: 'docker0395'
@@ -34,9 +22,11 @@ stages:
               Dockerfile: 'Dockerfile'
               tags: |
                 $(tags)
+              buildContext: '$(Build.SourcesDirectory)'
 
           - script: |
               echo "Running container..."
               docker run -d -p 8080:8080 --name demo1-app $(imageRepository):$(tags)
               sleep 10
               docker ps
+              curl -s http://localhost:8080/demo1/api/v1/projects
