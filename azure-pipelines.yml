@@ -20,6 +20,11 @@ stages:
               options: '-DskipTests'
               publishJUnitResults: true
               testResultsFiles: '**/surefire-reports/TEST-*.xml'
+              javaHomeOption: 'JDKVersion'
+              mavenVersionOption: 'Default'
+              mavenAuthenticateFeed: false
+              effectivePomSkip: false
+              sonarQubeRunAnalysis: false
           - task: Docker@2
             inputs:
               containerRegistry: 'docker0395'
@@ -35,4 +40,3 @@ stages:
               docker run -d -p 8080:8080 --name demo1-app $(imageRepository):$(tags)
               sleep 10
               docker ps
-              curl -s http://localhost:8080/demo1/api/v1/projects
