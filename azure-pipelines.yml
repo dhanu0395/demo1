@@ -37,6 +37,6 @@ stages:
 
           - script: |
               echo "Running container..."
-              docker run -d -p 8080:8080 --name demo1-app $(imageRepository):$(tags)
+              docker run -d -p 9090:9090 --name demo1-app $(imageRepository):$(tags)
               sleep 10
               docker ps
