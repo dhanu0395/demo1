@@ -1,5 +1,5 @@
 # Final Dockerfile
-FROM eclipse-temurin:17-jdk-jammy
+FROM openjdk:8-jdk-alpine
 WORKDIR /app
 
 # Copy JAR from pipeline build output
