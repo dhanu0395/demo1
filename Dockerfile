@@ -1,2 +1,3 @@
 FROM openjdk:17-jdk-slim
-COPY target/*.war /usr/local/tomcat/webapps/ROOT.war
+COPY target/*.jar app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]
