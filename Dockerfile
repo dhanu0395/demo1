@@ -1,14 +1,21 @@
-FROM openjdk:17-jdk-slim
-# Install curl and wget for testing
-RUN apt-get update && \
-    apt-get install -y curl wget && \
-    rm -rf /var/lib/apt/lists/*
+FROM maven:3.9.2-eclipse-temurin-17-slim AS build
+WORKDIR /app
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
+COPY src ./src
 
-# Copy the JAR from the build stage
-COPY target/*.jar app.jar
+# Build the JAR
+RUN mvn clean package -DskipTests
 
-# Expose port if needed
+# Stage 2: Final image
+FROM eclipse-temurin:17-jdk-jammy
+WORKDIR /app
+
+# Copy the JAR from build stage
+COPY --from=build /app/target/*.jar app.jar
+
+# Expose port
 EXPOSE 8080
 
-# Run the Spring Boot app
+# Run Spring Boot
 ENTRYPOINT ["java","-jar","/app.jar"]
